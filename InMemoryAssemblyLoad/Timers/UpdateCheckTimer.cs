@@ -46,21 +46,6 @@ namespace InMemoryAssemblyLoad.Timers
             }
         }
 
-        private void WriteDomainsLog()
-        {
-            var domains = CommonHelper.GetAppDomains();
-            if (domains != null && domains.Any())
-            {
-                var domainStringBuilder = new StringBuilder();
-                domainStringBuilder.AppendLine(null);
-                domainStringBuilder.AppendLine("--- Loaded Domains --------------------------------------------");
-                foreach (var domain in domains)
-                    domainStringBuilder.AppendLine("\t" + domain.FriendlyName);
-                domainStringBuilder.AppendLine("---------------------------------------------------------------");
-                FileLogger.Default.WriteInformationLog(domainStringBuilder.ToString().TrimEnd());
-            }
-        }
-
         private void RunRecovery(string recoveryFileName)
         {
             try
@@ -92,7 +77,16 @@ namespace InMemoryAssemblyLoad.Timers
 
             var outputs = loadRecoveryAssembly.ExecuteStaticMethod("Recovery", "Execute");
             if (outputs != null)
-                FileLogger.Default.WriteInformationLog(outputs.ToString());
+            {
+                var outputStringBuilder = new StringBuilder();
+                outputStringBuilder.AppendLine(null);
+                outputStringBuilder.AppendLine("--- Output -----------------------------------------");
+                var outputParts = outputs.ToString().Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries).ToList();
+                foreach (var outputPart in outputParts)
+                    outputStringBuilder.AppendLine("\t" + outputPart);
+                outputStringBuilder.AppendLine("----------------------------------------------------");
+                FileLogger.Default.WriteInformationLog(outputStringBuilder.ToString().TrimEnd());
+            }
 
             WriteDomainsLog();
 
@@ -119,5 +113,21 @@ namespace InMemoryAssemblyLoad.Timers
 
             return setupData;
         }
+
+        private void WriteDomainsLog()
+        {
+            var domains = CommonHelper.GetAppDomains();
+            if (domains != null && domains.Any())
+            {
+                var domainStringBuilder = new StringBuilder();
+                domainStringBuilder.AppendLine(null);
+                domainStringBuilder.AppendLine("--- Loaded Domains ("+ domains.Count() +") -----------------------------------------");
+                foreach (var domain in domains)
+                    domainStringBuilder.AppendLine("\t" + domain.FriendlyName + (AppDomain.CurrentDomain.FriendlyName == domain.FriendlyName ? "\t\t -- Current Domain" : "\t -- Child Domain"));
+                domainStringBuilder.AppendLine("--------------------------------------------------------------------");
+                FileLogger.Default.WriteInformationLog(domainStringBuilder.ToString().TrimEnd());
+            }
+        }
+
     }
 }
