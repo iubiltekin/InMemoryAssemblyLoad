@@ -1,0 +1,17 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/InMemoryAssemblyLoad/.vs
+/InMemoryAssemblyLoad/bin
+/InMemoryAssemblyLoad/obj
+/InMemoryAssemblyLoad.Common/bin
+/InMemoryAssemblyLoad.Common/obj
+/InMemoryAssemblyLoad.FileServer/bin
+/InMemoryAssemblyLoad.FileServer/obj
+/LoadModules/FirstModule/bin
+/LoadModules/FirstModule/obj
+/LoadModules/SecondModule/bin
+/LoadModules/SecondModule/obj
+*.user
